@@ -1,0 +1,12 @@
+{% extends "base.njk" %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">Blog Posts</h1>
+  <ul class="govuk-list">
+    {% for blogPost in blogPosts %}
+      <li>
+        <a href="blog-posts/{{ blogPost.id }}">{{ blogPost.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
