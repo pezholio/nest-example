@@ -1,12 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { AppModule } from './app.module';
+import { EncoreHelper } from './helpers/encore_helper';
+
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
-import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const express = app.getHttpAdapter().getInstance();
+  const entrypoints = require('../public/entrypoints.json');
+  const encorehelper = new EncoreHelper(entrypoints);
 
   const assets = path.join(__dirname, '..', 'public');
 
@@ -15,7 +19,16 @@ async function bootstrap() {
     path.join(__dirname, '..', 'node_modules', 'govuk-frontend')
   ];
 
-  nunjucks.configure(views, { express });
+  const nunjucksEnv = nunjucks.configure(
+    views,
+    {
+      noCache: process.env.NODE_ENV === "local" ? true : false,
+      express: express
+    }
+  );
+
+  nunjucksEnv.addGlobal('encore_entry_link_tags', await encorehelper.entryLinksTags());
+  nunjucksEnv.addGlobal('encore_entry_script_tags', await encorehelper.entryScriptTags());
 
   app.useStaticAssets(assets);
   app.setBaseViewsDir(views);
