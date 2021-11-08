@@ -1,0 +1,21 @@
+{{
+  govukInput({
+    label: {text: "Title"},
+    id: "title",
+    name: "title",
+    value: blogPost.title,
+    errorMessage: errors.title
+  })
+}}
+
+{{
+  govukTextarea({
+    label: {text: "Body"},
+    id: "body",
+    name: "body",
+    value: blogPost.body,
+    errorMessage: errors.body
+  })
+}}
+
+{{ govukButton({text: "Submit"}) }}

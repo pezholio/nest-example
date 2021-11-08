@@ -5,33 +5,11 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block content %}
-  {% if errors|length > 0 %}
-  {{ govukErrorSummary({
-    titleText: "There is a problem",
-    errorList: errors
-  }) }}
-  {% endif %}
-
+  {% include "../shared/_errors.njk" %}
   <h1 class="govuk-heading-l">New blog post</h1>
 
   <form action="/blog-posts" method="post">
-    {{
-      govukInput({
-        label: {text: "Title"},
-        id: "title",
-        name: "title"
-      })
-    }}
-
-    {{
-      govukTextarea({
-        label: {text: "Body"},
-        id: "body",
-        name: "body"
-      })
-    }}
-
-    {{ govukButton({text: "Submit"}) }}
+    {% include "./_form.njk" %}
   </form>
 
 {% endblock %}
