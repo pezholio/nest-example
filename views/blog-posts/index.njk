@@ -1,7 +1,15 @@
 {% extends "base.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">Blog Posts</h1>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Blog Posts</h1>
+    </div>
+    <div class="govuk-grid-column-one-third">
+      {{ govukButton({text: "Create a new blog post", href: "/blog-posts/new"}) }}
+    </div>
+  </div>
   <ul class="govuk-list">
     {% for blogPost in blogPosts %}
       <li>
