@@ -1,0 +1,15 @@
+{% extends "base.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% block content %}
+  {% include "../shared/_errors.njk" %}
+  <h1 class="govuk-heading-l">Edit blog post</h1>
+
+  <form action="/blog-posts/{{ blogPost.id }}" method="post">
+    {% include "./_form.njk" %}
+  </form>
+
+{% endblock %}

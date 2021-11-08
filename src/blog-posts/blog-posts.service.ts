@@ -28,4 +28,11 @@ export class BlogPostsService {
   async create(createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
     return await this.blogPostsRepository.save(createBlogPostDto);
   }
+
+  async update(id: string, createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
+    const blogPost = await this.findOne(id);
+    const updated = Object.assign(blogPost, createBlogPostDto);
+
+    return await this.blogPostsRepository.save(updated);
+  }
 }
