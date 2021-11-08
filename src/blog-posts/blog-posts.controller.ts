@@ -1,7 +1,7 @@
-import { Controller, Get, Render, Param, Post, Body, Redirect } from '@nestjs/common';
+import { Controller, Get, Render, Param, Post, Body, Redirect, UseFilters } from '@nestjs/common';
 import { BlogPostsService } from './blog-posts.service'
-import { CreateBlogPostDto} from './interfaces/create-blog-post.dto'
-
+import { CreateBlogPostDto } from './interfaces/create-blog-post.dto'
+import { HttpExceptionFilter } from './http-exception-filter'
 @Controller('blog-posts')
 export class BlogPostsController {
   constructor(private blogPostsService: BlogPostsService) {}
@@ -28,6 +28,7 @@ export class BlogPostsController {
 
   @Post()
   @Redirect('/blog-posts', 301)
+  @UseFilters(new HttpExceptionFilter())
   async create(@Body() createBlogPostDto: CreateBlogPostDto) {
     return this.blogPostsService.create(createBlogPostDto);
   }
