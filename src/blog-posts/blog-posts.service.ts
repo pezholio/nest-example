@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import { BlogPost } from './blog-post.entity';
+import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
 
 @Injectable()
 export class BlogPostsService {
@@ -22,5 +23,9 @@ export class BlogPostsService {
 
   async remove(id: string): Promise<void> {
     await this.blogPostsRepository.delete(id);
+  }
+
+  async create(createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
+    return await this.blogPostsRepository.save(createBlogPostDto);
   }
 }

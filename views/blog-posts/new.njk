@@ -1,0 +1,29 @@
+{% extends "base.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">New blog post</h1>
+
+  <form action="/blog-posts" method="post">
+    {{
+      govukInput({
+        label: {text: "Title"},
+        id: "title",
+        name: "title"
+      })
+    }}
+
+    {{
+      govukTextarea({
+        label: {text: "Body"},
+        id: "body",
+        name: "body"
+      })
+    }}
+
+    {{ govukButton({text: "Submit"}) }}
+  </form>
+
+{% endblock %}

@@ -1,5 +1,6 @@
-import { Controller, Get, Render, Param } from '@nestjs/common';
+import { Controller, Get, Render, Param, Post, Body, Redirect } from '@nestjs/common';
 import { BlogPostsService } from './blog-posts.service'
+import { CreateBlogPostDto} from './interfaces/create-blog-post.dto'
 
 @Controller('blog-posts')
 export class BlogPostsController {
@@ -13,11 +14,21 @@ export class BlogPostsController {
     return { blogPosts: blogPosts }
   }
 
+  @Get('new')
+  @Render('blog-posts/new')
+  async new() {}
+
   @Get(':postID')
   @Render('blog-posts/show')
-  async getCourse(@Param('postID') postID) {
+  async show(@Param('postID') postID) {
     const blogPost = await this.blogPostsService.findOne(postID)
 
     return { blogPost: blogPost };
+  }
+
+  @Post()
+  @Redirect('/blog-posts', 301)
+  async create(@Body() createBlogPostDto: CreateBlogPostDto) {
+    return this.blogPostsService.create(createBlogPostDto);
   }
 }
