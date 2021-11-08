@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
@@ -31,6 +32,7 @@ async function bootstrap() {
   nunjucksEnv.addGlobal('encore_entry_script_tags', await encorehelper.entryScriptTags());
 
   app.useStaticAssets(assets);
+  app.useGlobalPipes(new ValidationPipe());
   app.setBaseViewsDir(views);
   app.setViewEngine('njk');
 
