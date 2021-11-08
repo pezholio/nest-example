@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# script/setup: Set up the application for the first time after cloning, or set
+#               it back to the initial unused state.
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+echo "==> Dropping and recreating the database..."
+
+dropdb nest-test > /dev/null 2>&1
+createdb nest-test
+
+echo "==> Installing dependencies..."
+
+npm install
+
+echo "==> Running database migrations"
+
+npm run typeorm migration:run
+
+echo "==> Building assets..."
+
+npm run build:assets
+
