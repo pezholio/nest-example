@@ -7,8 +7,8 @@ export default registerAs('database', () => {
     return {
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: ['./dist/**/*.entity{.ts,.js}'],
-      migrations: ['./dist/db/migrate/*{.ts,.js}'],
+      entities: [process.env.ENTITIES_GLOB],
+      migrations: [process.env.MIGRATIONS_GLOB],
       migrationsRun: true,
       cli: {
         migrationsDir: 'src/db/migrate'

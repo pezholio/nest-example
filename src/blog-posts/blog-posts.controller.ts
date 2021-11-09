@@ -38,7 +38,7 @@ export class BlogPostsController {
   @Redirect('/blog-posts', 301)
   @UseFilters(new HttpExceptionFilter())
   async update(@Param('id') postID: string, @Body() createBlogPostDto: CreateBlogPostDto) {
-    await this.blogPostsService.update(postID, createBlogPostDto)
+    return this.blogPostsService.update(postID, createBlogPostDto)
   }
 
   @Post()
