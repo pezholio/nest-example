@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Redirect } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -6,8 +6,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  @Render('show')
-  getHello() {
-    return {}
-  }
+  @Redirect('/blog-posts', 301)
+  applicationRoot() {}
 }
