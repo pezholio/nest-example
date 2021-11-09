@@ -9,8 +9,11 @@ cd "$(dirname "$0")/.."
 
 echo "==> Dropping and recreating the database..."
 
-dropdb nest-test > /dev/null 2>&1
-createdb nest-test
+dropdb nest-blog-development > /dev/null 2>&1
+dropdb nest-blog-test > /dev/null 2>&1
+
+createdb nest-blog-development
+createdb nest-blog-test
 
 echo "==> Installing dependencies..."
 
