@@ -7,9 +7,10 @@ export default registerAs('database', () => {
     return {
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [process.env.ENTITIES_GLOB],
-      migrations: [process.env.MIGRATIONS_GLOB],
+      entities: ["./dist/**/*.entity.js"],
+      migrations: ["./dist/db/migrate/*.js"],
       migrationsRun: true,
+      dropSchema: (process.env.NODE_ENV == "test"),
       cli: {
         migrationsDir: 'src/db/migrate'
       }
