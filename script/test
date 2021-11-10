@@ -2,6 +2,10 @@
 
 # script/test: Run the test suite for the application.
 
-echo "==> Running the tests..."
+echo "==> Running unit tests..."
 
 npm run test
+
+echo "==> Running e2e tests..."
+
+npm run test:e2e
