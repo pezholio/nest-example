@@ -2,6 +2,14 @@
 
 # script/test: Run the test suite for the application.
 
+echo "==> Checking code for Prettier errors"
+
+npm run format:check
+
+echo "==> Linting the code"
+
+npm run lint
+
 echo "==> Running unit tests..."
 
 npm run test
