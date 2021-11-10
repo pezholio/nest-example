@@ -17,19 +17,22 @@ async function bootstrap() {
 
   const views = [
     path.join(__dirname, '..', 'views'),
-    path.join(__dirname, '..', 'node_modules', 'govuk-frontend')
+    path.join(__dirname, '..', 'node_modules', 'govuk-frontend'),
   ];
 
-  const nunjucksEnv = nunjucks.configure(
-    views,
-    {
-      noCache: process.env.NODE_ENV === "local" ? true : false,
-      express: express
-    }
-  );
+  const nunjucksEnv = nunjucks.configure(views, {
+    noCache: process.env.NODE_ENV === 'local' ? true : false,
+    express: express,
+  });
 
-  nunjucksEnv.addGlobal('encore_entry_link_tags', await encorehelper.entryLinksTags());
-  nunjucksEnv.addGlobal('encore_entry_script_tags', await encorehelper.entryScriptTags());
+  nunjucksEnv.addGlobal(
+    'encore_entry_link_tags',
+    await encorehelper.entryLinksTags(),
+  );
+  nunjucksEnv.addGlobal(
+    'encore_entry_script_tags',
+    await encorehelper.entryScriptTags(),
+  );
 
   app.useStaticAssets(assets);
   app.useGlobalPipes(new ValidationPipe());

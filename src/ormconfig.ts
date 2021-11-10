@@ -1,4 +1,4 @@
-import {ConnectionOptions} from 'typeorm';
+import { ConnectionOptions } from 'typeorm';
 
 const config: ConnectionOptions = {
   type: 'postgres',
@@ -7,8 +7,8 @@ const config: ConnectionOptions = {
   migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
   migrationsRun: true,
   cli: {
-    migrationsDir: "src/db/migrate"
-  }
-}
+    migrationsDir: 'src/db/migrate',
+  },
+};
 
 export = config;

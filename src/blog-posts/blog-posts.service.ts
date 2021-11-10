@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -29,7 +28,10 @@ export class BlogPostsService {
     return await this.blogPostsRepository.save(createBlogPostDto);
   }
 
-  async update(id: string, createBlogPostDto: CreateBlogPostDto): Promise<BlogPost> {
+  async update(
+    id: string,
+    createBlogPostDto: CreateBlogPostDto,
+  ): Promise<BlogPost> {
     const blogPost = await this.findOne(id);
     const updated = Object.assign(blogPost, createBlogPostDto);
 

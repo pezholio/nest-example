@@ -1,15 +1,14 @@
-
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class BlogPost {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   title: string;
 
-  @Column("varchar")
+  @Column('varchar')
   body: string;
 
   constructor(title?: string, body?: string) {

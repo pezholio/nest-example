@@ -1,8 +1,12 @@
-
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { validate } from 'class-validator';
-import { CreateBlogPostDto } from './interfaces/create-blog-post.dto'
+import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -16,18 +20,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const errors = {};
     const errorMessages = [];
 
-    validationErrors.forEach(error => {
-      errors[error.property] = { text: Object.values(error.constraints).join() }
+    validationErrors.forEach((error) => {
+      errors[error.property] = {
+        text: Object.values(error.constraints).join(),
+      };
       errorMessages.push({
         text: Object.values(error.constraints).join(),
-        href: `#${error.property}`
-      })
-    })
+        href: `#${error.property}`,
+      });
+    });
 
     response.render('blog-posts/new', {
       errors: errors,
       errorMessages: errorMessages,
-      blogPost: blogPost
-    })
+      blogPost: blogPost,
+    });
   }
 }
