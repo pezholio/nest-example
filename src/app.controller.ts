@@ -7,5 +7,7 @@ export class AppController {
 
   @Get()
   @Redirect('/blog-posts', 301)
-  applicationRoot() {}
+  applicationRoot() {
+    // do nothing.
+  }
 }

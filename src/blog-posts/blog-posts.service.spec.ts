@@ -24,7 +24,7 @@ describe('BlogPostsService', () => {
             find: jest.fn().mockResolvedValue(blogPostsArray),
             findOne: jest
               .fn()
-              .mockImplementation((id: string) => Promise.resolve(blogPost)),
+              .mockImplementation(() => Promise.resolve(blogPost)),
             save: jest.fn().mockResolvedValue(true),
           },
         },

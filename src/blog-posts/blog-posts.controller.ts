@@ -7,7 +7,6 @@ import {
   Body,
   Redirect,
   UseFilters,
-  Put,
 } from '@nestjs/common';
 import { BlogPostsService } from './blog-posts.service';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
@@ -26,7 +25,9 @@ export class BlogPostsController {
 
   @Get('new')
   @Render('blog-posts/new')
-  async new() {}
+  async new() {
+    // do nothing.
+  }
 
   @Get(':postID')
   @Render('blog-posts/show')

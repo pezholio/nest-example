@@ -6,7 +6,6 @@ import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
 
 describe('BlogPostsController', () => {
   let controller: BlogPostsController;
-  let blogPostsService: BlogPostsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -43,7 +42,6 @@ describe('BlogPostsController', () => {
     }).compile();
 
     controller = module.get<BlogPostsController>(BlogPostsController);
-    blogPostsService = module.get<BlogPostsService>(BlogPostsService);
   });
 
   it('should be defined', async () => {
