@@ -46,8 +46,13 @@ export class BlogPostsService {
     createBlogPostDto: CreateBlogPostDto,
   ): Promise<BlogPost> {
     const blogPost = await this.findOne(id);
-    const updated = Object.assign(blogPost, createBlogPostDto);
+    const updated = { ...blogPost, ...createBlogPostDto };
+    const validator = await Validator.validate(CreateBlogPostDto, updated);
 
-    return await this.blogPostsRepository.save(updated);
+    if (validator.valid()) {
+      return await this.blogPostsRepository.save(createBlogPostDto);
+    } else {
+      throw new ValidationFailedError(validator.errors);
+    }
   }
 }

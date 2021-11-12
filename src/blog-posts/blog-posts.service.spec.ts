@@ -23,9 +23,7 @@ describe('BlogPostsService', () => {
           provide: getRepositoryToken(BlogPost),
           useValue: {
             find: jest.fn().mockResolvedValue(blogPostsArray),
-            findOne: jest
-              .fn()
-              .mockImplementation(() => Promise.resolve(blogPost)),
+            findOne: jest.fn().mockResolvedValue(blogPost),
             save: jest.fn().mockResolvedValue(true),
           },
         },
@@ -84,14 +82,23 @@ describe('BlogPostsService', () => {
         body: 'New text',
       };
 
-      service.findOne = jest.fn().mockResolvedValue(blogPost);
-      Object.assign = jest.fn(() => newBlogPostDto);
+      const findOneSpy = jest.spyOn(repo, 'findOne');
 
       await service.update('some-uuid', newBlogPostDto);
 
-      expect(service.findOne).toHaveBeenCalledWith('some-uuid');
-      expect(Object.assign).toHaveBeenCalledWith(blogPost, newBlogPostDto);
+      expect(findOneSpy).toHaveBeenCalledWith('some-uuid');
       expect(repo.save).toHaveBeenCalledWith(newBlogPostDto);
+    });
+
+    it('should raise an error when the post is invalid', async () => {
+      const newBlogPostDto: CreateBlogPostDto = {
+        title: 'New Title',
+        body: '',
+      };
+
+      await expect(service.update('some-uuid', newBlogPostDto)).rejects.toThrow(
+        ValidationFailedError,
+      );
     });
   });
 });
