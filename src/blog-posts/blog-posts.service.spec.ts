@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { BlogPostsService } from './blog-posts.service';
 import { BlogPost } from './blog-post.entity';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
+import { ValidationFailedError } from '../helpers/validator';
 
 const blogPost = new BlogPost('Blog post 1', 'Body');
 
@@ -59,9 +60,20 @@ describe('BlogPostsService', () => {
         title: 'Blog Post 1',
         body: 'Some text',
       };
-      service.create(newBlogPostDto);
+      await service.create(newBlogPostDto);
 
       expect(repo.save).toHaveBeenCalledWith(newBlogPostDto);
+    });
+
+    it('should raise an error when the post is invalid', async () => {
+      const newBlogPostDto: CreateBlogPostDto = {
+        title: 'Blog Post 1',
+        body: '',
+      };
+
+      await expect(service.create(newBlogPostDto)).rejects.toThrow(
+        ValidationFailedError,
+      );
     });
   });
 
