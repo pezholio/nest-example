@@ -2,6 +2,8 @@
 
 # script/test: Run the test suite for the application.
 
+set -e
+
 echo "==> Checking code for Prettier errors"
 
 npm run format:check
