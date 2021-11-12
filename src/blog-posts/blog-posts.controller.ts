@@ -7,10 +7,13 @@ import {
   Body,
   Redirect,
   UseFilters,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { BlogPostsService } from './blog-posts.service';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
 import { HttpExceptionFilter } from './http-exception-filter';
+import { ValidationFailedError } from '../helpers/validator';
 @Controller('blog-posts')
 export class BlogPostsController {
   constructor(private blogPostsService: BlogPostsService) {}
@@ -56,9 +59,22 @@ export class BlogPostsController {
   }
 
   @Post()
-  @Redirect('/blog-posts', 301)
-  @UseFilters(new HttpExceptionFilter())
-  async create(@Body() createBlogPostDto: CreateBlogPostDto) {
-    return this.blogPostsService.create(createBlogPostDto);
+  async create(
+    @Body() createBlogPostDto: CreateBlogPostDto,
+    @Res() res: Response,
+  ) {
+    try {
+      await this.blogPostsService.create(createBlogPostDto);
+      return res.redirect(301, '/blog-posts');
+    } catch (err: unknown) {
+      if (err instanceof ValidationFailedError) {
+        return res.render('blog-posts/new', {
+          blogPost: createBlogPostDto,
+          errors: err.fullMessages(),
+        });
+      } else {
+        throw err;
+      }
+    }
   }
 }

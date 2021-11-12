@@ -8,6 +8,15 @@ export class ValidationFailedError extends Error {
     super();
     this.validationErrors = validationErrors;
   }
+
+  public fullMessages(): object {
+    return this.validationErrors.reduce((map, error) => {
+      map[error.property] = {
+        text: Object.values(error.constraints).join(),
+      };
+      return map;
+    }, {});
+  }
 }
 
 export class Validator {
