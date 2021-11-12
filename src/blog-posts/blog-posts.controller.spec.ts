@@ -128,11 +128,30 @@ describe('BlogPostsController', () => {
         title: 'Blog Post 1',
         body: 'Some text',
       };
-      await expect(
-        controller.update('some-uuid', newBlogPostDto),
-      ).resolves.toEqual({
-        id: 'some-uuid',
-        ...newBlogPostDto,
+      const res = createMock<Response>();
+
+      await controller.update('some-uuid', newBlogPostDto, res);
+
+      expect(res.redirect).toHaveBeenCalledWith(301, '/blog-posts');
+    });
+
+    it('should render errors when the post is invalid', async () => {
+      const newBlogPostDto: CreateBlogPostDto = {
+        title: '',
+        body: 'Some text',
+      };
+      const res = createMock<Response>();
+      const errors = [];
+
+      service.update = jest.fn().mockImplementation(() => {
+        throw new ValidationFailedError(errors);
+      });
+
+      await controller.update('some-uuid', newBlogPostDto, res);
+
+      expect(res.render).toHaveBeenCalledWith('blog-posts/edit', {
+        blogPost: newBlogPostDto,
+        errors: {},
       });
     });
   });
