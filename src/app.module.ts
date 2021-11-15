@@ -19,7 +19,7 @@ import dbConfiguration from './config/db.config';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        ...configService.get('database'),
+        ...(await configService.get('database')),
       }),
     }),
     BlogPostsModule,
