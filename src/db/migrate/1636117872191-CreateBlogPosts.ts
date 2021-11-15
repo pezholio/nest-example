@@ -30,6 +30,6 @@ export class CreateBlogPosts1636117872191 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.query(`DROP TABLE blog_post`);
+    await queryRunner.query(`DROP TABLE blog_post`);
   }
 }
