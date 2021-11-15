@@ -18,28 +18,25 @@ describe('BlogPostsController', () => {
         {
           provide: BlogPostsService,
           useValue: {
-            findAll: jest.fn().mockResolvedValue([
-              { title: 'Blog Post 1', body: 'Some text' },
-              { title: 'Blog Post 2', body: 'Some text' },
-            ]),
-            findOne: jest.fn().mockImplementation((id: string) =>
-              Promise.resolve({
+            findAll: () => {
+              return [
+                { title: 'Blog Post 1', body: 'Some text' },
+                { title: 'Blog Post 2', body: 'Some text' },
+              ]
+            },
+            findOne: async (id: string) => {
+              return Promise.resolve({
                 title: 'Blog Post 1',
                 body: 'Some text',
                 id,
-              }),
-            ),
-            create: jest
-              .fn()
-              .mockImplementation((blogPost: CreateBlogPostDto) =>
-                Promise.resolve({ id: 'a uuid', ...blogPost }),
-              ),
-            update: jest
-              .fn()
-              .mockImplementation(
-                (postID: string, blogPost: CreateBlogPostDto) =>
-                  Promise.resolve({ id: postID, ...blogPost }),
-              ),
+              })
+            },
+            create: async (blogPost: CreateBlogPostDto) => {
+              return Promise.resolve({ id: 'a uuid', ...blogPost })
+            },
+            update: async (postID: string, blogPost: CreateBlogPostDto) => {
+              return Promise.resolve({ id: postID, ...blogPost })
+            }
           },
         },
       ],
@@ -109,7 +106,7 @@ describe('BlogPostsController', () => {
       const res = createMock<Response>();
       const errors = [];
 
-      service.create = jest.fn().mockImplementation(() => {
+      jest.spyOn(service, "create").mockImplementation(() => {
         throw new ValidationFailedError(errors);
       });
 
@@ -143,7 +140,7 @@ describe('BlogPostsController', () => {
       const res = createMock<Response>();
       const errors = [];
 
-      service.update = jest.fn().mockImplementation(() => {
+      jest.spyOn(service, "update").mockImplementation(() => {
         throw new ValidationFailedError(errors);
       });
 

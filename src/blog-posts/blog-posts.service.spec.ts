@@ -22,9 +22,15 @@ describe('BlogPostsService', () => {
         {
           provide: getRepositoryToken(BlogPost),
           useValue: {
-            find: jest.fn().mockResolvedValue(blogPostsArray),
-            findOne: jest.fn().mockResolvedValue(blogPost),
-            save: jest.fn().mockResolvedValue(true),
+            find: () => {
+              return blogPostsArray;
+            },
+            findOne: () => {
+              return blogPost;
+            },
+            save: () => {
+              return true;
+            },
           },
         },
       ],
@@ -36,8 +42,9 @@ describe('BlogPostsService', () => {
 
   describe('findAll', () => {
     it('should return all blog posts', async () => {
-      const repoSpy = jest.spyOn(repo, 'find');
+      const repoSpy = jest.spyOn(repo, 'find')
       const posts = await service.findAll();
+
       expect(posts).toEqual(blogPostsArray);
       expect(repoSpy).toHaveBeenCalled();
     });
@@ -45,8 +52,9 @@ describe('BlogPostsService', () => {
 
   describe('findOne', () => {
     it('should return a blog post', async () => {
-      const repoSpy = jest.spyOn(repo, 'findOne');
+      const repoSpy = jest.spyOn(repo, 'findOne')
       const post = await service.findOne('some-uuid');
+
       expect(post).toEqual(blogPost);
       expect(repoSpy).toHaveBeenCalledWith('some-uuid');
     });
@@ -58,9 +66,10 @@ describe('BlogPostsService', () => {
         title: 'Blog Post 1',
         body: 'Some text',
       };
+      const repoSpy = jest.spyOn(repo, 'save');
       await service.create(newBlogPostDto);
 
-      expect(repo.save).toHaveBeenCalledWith(newBlogPostDto);
+      expect(repoSpy).toHaveBeenCalledWith(newBlogPostDto);
     });
 
     it('should raise an error when the post is invalid', async () => {
@@ -82,12 +91,13 @@ describe('BlogPostsService', () => {
         body: 'New text',
       };
 
-      const findOneSpy = jest.spyOn(repo, 'findOne');
+      const findOneSpy = jest.spyOn(repo, 'findOne')
+      const saveSpy = jest.spyOn(repo, 'save');
 
       await service.update('some-uuid', newBlogPostDto);
 
       expect(findOneSpy).toHaveBeenCalledWith('some-uuid');
-      expect(repo.save).toHaveBeenCalledWith(newBlogPostDto);
+      expect(saveSpy).toHaveBeenCalledWith(newBlogPostDto);
     });
 
     it('should raise an error when the post is invalid', async () => {
