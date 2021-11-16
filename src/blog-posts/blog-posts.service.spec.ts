@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { BlogPostsService } from './blog-posts.service';
 import { BlogPost } from './blog-post.entity';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
-import { ValidationFailedError } from '../helpers/validator';
 
 const blogPost = new BlogPost('Blog post 1', 'Body');
 
@@ -42,7 +41,7 @@ describe('BlogPostsService', () => {
 
   describe('findAll', () => {
     it('should return all blog posts', async () => {
-      const repoSpy = jest.spyOn(repo, 'find')
+      const repoSpy = jest.spyOn(repo, 'find');
       const posts = await service.findAll();
 
       expect(posts).toEqual(blogPostsArray);
@@ -52,7 +51,7 @@ describe('BlogPostsService', () => {
 
   describe('findOne', () => {
     it('should return a blog post', async () => {
-      const repoSpy = jest.spyOn(repo, 'findOne')
+      const repoSpy = jest.spyOn(repo, 'findOne');
       const post = await service.findOne('some-uuid');
 
       expect(post).toEqual(blogPost);
@@ -71,17 +70,6 @@ describe('BlogPostsService', () => {
 
       expect(repoSpy).toHaveBeenCalledWith(newBlogPostDto);
     });
-
-    it('should raise an error when the post is invalid', async () => {
-      const newBlogPostDto: CreateBlogPostDto = {
-        title: 'Blog Post 1',
-        body: '',
-      };
-
-      await expect(service.create(newBlogPostDto)).rejects.toThrow(
-        ValidationFailedError,
-      );
-    });
   });
 
   describe('update', () => {
@@ -91,24 +79,13 @@ describe('BlogPostsService', () => {
         body: 'New text',
       };
 
-      const findOneSpy = jest.spyOn(repo, 'findOne')
+      const findOneSpy = jest.spyOn(repo, 'findOne');
       const saveSpy = jest.spyOn(repo, 'save');
 
       await service.update('some-uuid', newBlogPostDto);
 
       expect(findOneSpy).toHaveBeenCalledWith('some-uuid');
       expect(saveSpy).toHaveBeenCalledWith(newBlogPostDto);
-    });
-
-    it('should raise an error when the post is invalid', async () => {
-      const newBlogPostDto: CreateBlogPostDto = {
-        title: 'New Title',
-        body: '',
-      };
-
-      await expect(service.update('some-uuid', newBlogPostDto)).rejects.toThrow(
-        ValidationFailedError,
-      );
     });
   });
 });

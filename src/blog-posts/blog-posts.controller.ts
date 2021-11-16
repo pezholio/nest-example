@@ -5,12 +5,13 @@ import {
   Param,
   Post,
   Body,
-  Res,
+  UseFilters,
+  Redirect,
 } from '@nestjs/common';
-import { Response } from 'express';
 import { BlogPostsService } from './blog-posts.service';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
-import { ValidationFailedError } from '../helpers/validator';
+
+import { ValidationExceptionFilter } from '../validation/validation-exception-filter';
 @Controller('blog-posts')
 export class BlogPostsController {
   constructor(private blogPostsService: BlogPostsService) {}
@@ -46,44 +47,19 @@ export class BlogPostsController {
   }
 
   @Post(':postID')
+  @UseFilters(new ValidationExceptionFilter('blog-posts/edit', 'blogPost'))
+  @Redirect('/blog-posts', 301)
   async update(
     @Param('id') postID: string,
     @Body() createBlogPostDto: CreateBlogPostDto,
-    @Res() res: Response,
   ) {
-    try {
-      await this.blogPostsService.update(postID, createBlogPostDto);
-      return res.redirect(301, '/blog-posts');
-    } catch (err: unknown) {
-      if (err instanceof ValidationFailedError) {
-        return res.render('blog-posts/edit', {
-          blogPost: createBlogPostDto,
-          errors: err.fullMessages(),
-        });
-      } else {
-        throw err;
-      }
-    }
-    return;
+    return await this.blogPostsService.update(postID, createBlogPostDto);
   }
 
   @Post()
-  async create(
-    @Body() createBlogPostDto: CreateBlogPostDto,
-    @Res() res: Response,
-  ) {
-    try {
-      await this.blogPostsService.create(createBlogPostDto);
-      return res.redirect(301, '/blog-posts');
-    } catch (err: unknown) {
-      if (err instanceof ValidationFailedError) {
-        return res.render('blog-posts/new', {
-          blogPost: createBlogPostDto,
-          errors: err.fullMessages(),
-        });
-      } else {
-        throw err;
-      }
-    }
+  @UseFilters(new ValidationExceptionFilter('blog-posts/new', 'blogPost'))
+  @Redirect('/blog-posts', 301)
+  async create(@Body() createBlogPostDto: CreateBlogPostDto) {
+    return await this.blogPostsService.create(createBlogPostDto);
   }
 }

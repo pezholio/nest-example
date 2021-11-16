@@ -1,9 +1,13 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { ValidationError } from 'class-validator';
+
 import { AppModule } from './app.module';
 import { EncoreHelper } from './helpers/encore_helper';
+import { ValidationFailedError } from './validation/validation-failed-error';
 
 import * as nunjucks from 'nunjucks';
 import * as path from 'path';
@@ -38,6 +42,13 @@ async function bootstrap() {
   app.useStaticAssets(assets);
   app.setBaseViewsDir(views);
   app.setViewEngine('njk');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      exceptionFactory: (validationErrors: ValidationError[] = []) => {
+        return new ValidationFailedError(validationErrors);
+      },
+    }),
+  );
 
   await app.listen(3000);
 }

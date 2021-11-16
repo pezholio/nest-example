@@ -1,15 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { createMock } from '@golevelup/ts-jest';
-import { Response } from 'express';
 
 import { BlogPostsController } from './blog-posts.controller';
 import { BlogPostsService } from './blog-posts.service';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
-import { ValidationFailedError } from '../helpers/validator';
 
 describe('BlogPostsController', () => {
   let controller: BlogPostsController;
-  let service: BlogPostsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,28 +18,27 @@ describe('BlogPostsController', () => {
               return [
                 { title: 'Blog Post 1', body: 'Some text' },
                 { title: 'Blog Post 2', body: 'Some text' },
-              ]
+              ];
             },
             findOne: async (id: string) => {
               return Promise.resolve({
                 title: 'Blog Post 1',
                 body: 'Some text',
                 id,
-              })
+              });
             },
             create: async (blogPost: CreateBlogPostDto) => {
-              return Promise.resolve({ id: 'a uuid', ...blogPost })
+              return Promise.resolve({ id: 'a uuid', ...blogPost });
             },
             update: async (postID: string, blogPost: CreateBlogPostDto) => {
-              return Promise.resolve({ id: postID, ...blogPost })
-            }
+              return Promise.resolve({ id: postID, ...blogPost });
+            },
           },
         },
       ],
     }).compile();
 
     controller = module.get<BlogPostsController>(BlogPostsController);
-    service = module.get<BlogPostsService>(BlogPostsService);
   });
 
   it('should be defined', async () => {
@@ -91,64 +86,23 @@ describe('BlogPostsController', () => {
         title: 'Blog Post 1',
         body: 'Some text',
       };
-      const res = createMock<Response>();
-
-      await controller.create(newBlogPostDto, res);
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/blog-posts');
-    });
-
-    it('should render errors when the post is invalid', async () => {
-      const newBlogPostDto: CreateBlogPostDto = {
-        title: '',
-        body: '',
-      };
-      const res = createMock<Response>();
-      const errors = [];
-
-      jest.spyOn(service, "create").mockImplementation(() => {
-        throw new ValidationFailedError(errors);
-      });
-
-      await controller.create(newBlogPostDto, res);
-
-      expect(res.render).toHaveBeenCalledWith('blog-posts/new', {
-        blogPost: newBlogPostDto,
-        errors: {},
+      expect(await controller.create(newBlogPostDto)).toEqual({
+        id: 'a uuid',
+        ...newBlogPostDto,
       });
     });
   });
 
   describe('update', () => {
     it('should update a new blog post', async () => {
-      const newBlogPostDto: CreateBlogPostDto = {
+      const updatedBlogPostDto: CreateBlogPostDto = {
         title: 'Blog Post 1',
         body: 'Some text',
       };
-      const res = createMock<Response>();
 
-      await controller.update('some-uuid', newBlogPostDto, res);
-
-      expect(res.redirect).toHaveBeenCalledWith(301, '/blog-posts');
-    });
-
-    it('should render errors when the post is invalid', async () => {
-      const newBlogPostDto: CreateBlogPostDto = {
-        title: '',
-        body: 'Some text',
-      };
-      const res = createMock<Response>();
-      const errors = [];
-
-      jest.spyOn(service, "update").mockImplementation(() => {
-        throw new ValidationFailedError(errors);
-      });
-
-      await controller.update('some-uuid', newBlogPostDto, res);
-
-      expect(res.render).toHaveBeenCalledWith('blog-posts/edit', {
-        blogPost: newBlogPostDto,
-        errors: {},
+      expect(await controller.update('some-uuid', updatedBlogPostDto)).toEqual({
+        id: 'some-uuid',
+        ...updatedBlogPostDto,
       });
     });
   });

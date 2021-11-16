@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 
 import { BlogPost } from './blog-post.entity';
 import { CreateBlogPostDto } from './interfaces/create-blog-post.dto';
-import { ValidationFailedError, Validator } from '../helpers/validator';
 
 @Injectable()
 export class BlogPostsService {
@@ -29,16 +28,7 @@ export class BlogPostsService {
   async create(
     createBlogPostDto: CreateBlogPostDto,
   ): Promise<BlogPost | object> {
-    const validator = await Validator.validate(
-      CreateBlogPostDto,
-      createBlogPostDto,
-    );
-
-    if (validator.valid()) {
-      return await this.blogPostsRepository.save(createBlogPostDto);
-    } else {
-      throw new ValidationFailedError(validator.errors);
-    }
+    return await this.blogPostsRepository.save(createBlogPostDto);
   }
 
   async update(
@@ -47,12 +37,7 @@ export class BlogPostsService {
   ): Promise<BlogPost> {
     const blogPost = await this.findOne(id);
     const updated = { ...blogPost, ...createBlogPostDto };
-    const validator = await Validator.validate(CreateBlogPostDto, updated);
 
-    if (validator.valid()) {
-      return await this.blogPostsRepository.save(createBlogPostDto);
-    } else {
-      throw new ValidationFailedError(validator.errors);
-    }
+    return await this.blogPostsRepository.save(updated);
   }
 }

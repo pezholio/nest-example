@@ -7,8 +7,11 @@
 {% block content %}
   {% include "../shared/_errors.njk" %}
   <h1 class="govuk-heading-l">Edit blog post</h1>
-
-  <form action="/blog-posts/{{ blogPost.id }}" method="post">
+  {% if blogPost.id %}
+    <form action="/blog-posts/{{ blogPost.id }}" method="post">
+  {% else %}
+    <form action="{{ url }}" method="post">
+  {% endif %}
     {% include "./_form.njk" %}
   </form>
 
